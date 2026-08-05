@@ -42,7 +42,17 @@ function createWindow() {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
 }
-
+ win.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(`
+      window.prompt = (message, defaultValue) => {
+        // 如果你需要用户输入，可以在这里改成 Electron 的 dialog 实现
+        // 现在直接返回默认值（或空字符串）
+        return defaultValue || '';
+      };
+      console.log('prompt 已被覆盖，现在不会报错');
+    `);
+  });
+}
 app.whenReady().then(() => {
   startServer();
   createWindow();
