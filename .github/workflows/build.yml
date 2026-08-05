@@ -1,0 +1,39 @@
+name: Build Desktop EXE
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 安装 pnpm
+        run: npm install -g pnpm
+
+      - name: 安装依赖
+        run: pnpm install
+
+      - name: 构建前端页面
+        run: pnpm run build
+
+      - name: 全局安装 electron-builder 并打包
+        run: |
+          npm install -g electron-builder
+          pnpm run electron:build
+
+      - name: 上传 EXE 文件
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-desktop-app
+          path: release/*.exe
