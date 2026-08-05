@@ -10,7 +10,26 @@
     "start": "bash ./scripts/start.sh",
     "ts-check": "tsc -p tsconfig.json",
     "lint:build": "eslint . --quiet",
-    "validate": "pnpm run --parallel '/^(ts-check|lint:build)$/'"
+    "validate": "pnpm run --parallel '/^(ts-check|lint:build)$/'",
+    "electron:build": "electron-builder",
+    "electron:dev": "electron ."
+  },
+  "main": "electron/main.js",
+  "build": {
+    "appId": "com.coze.myapp",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "server.js",
+      "server/**/*"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "portable",
+      "artifactName": "MyCozeApp.exe"
+    }
   },
   "dependencies": {
     "@supabase/supabase-js": "2.95.3",
