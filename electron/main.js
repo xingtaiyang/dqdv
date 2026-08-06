@@ -29,10 +29,10 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
-    },
+     nodeIntegration: true,      // 允许渲染进程使用 Node API
+     contextIsolation: false,    // 关闭隔离，让 prompt 等原生方法可用
+     preload: path.join(__dirname, 'preload.js'),
+}，
   });
 
   const isDev = !app.isPackaged;
@@ -42,17 +42,6 @@ function createWindow() {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
 
-  // ===== 覆盖 prompt，避免导出报错 =====
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.executeJavaScript(`
-      window.prompt = (message, defaultValue) => {
-        // 直接返回默认值（空字符串），避免报错
-        return defaultValue || '';
-      };
-      console.log('prompt 已覆盖，导出功能可正常使用');
-    `);
-  });
-}
 
 app.whenReady().then(() => {
   startServer();
