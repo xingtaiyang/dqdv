@@ -12,7 +12,7 @@ function startServer() {
   } else {
     serverPath = path.join(process.resourcesPath, 'app.asar', 'server.js');
   }
-  
+
   try {
     serverProcess = fork(serverPath, [], {
       env: { ...process.env, PORT: 3000 },
@@ -29,10 +29,10 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-     nodeIntegration: true,      // 允许渲染进程使用 Node API
-     contextIsolation: false,    // 关闭隔离，让 prompt 等原生方法可用
-     preload: path.join(__dirname, 'preload.js'),
-}，
+      nodeIntegration: true,
+      contextIsolation: false,
+      preload: path.join(__dirname, 'preload.js'),
+    },
   });
 
   const isDev = !app.isPackaged;
@@ -41,7 +41,7 @@ function createWindow() {
   } else {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
-
+}
 
 app.whenReady().then(() => {
   startServer();
