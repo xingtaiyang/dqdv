@@ -41,6 +41,21 @@ function createWindow() {
   } else {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
+
+  // 🎯 关键修复：重写 prompt0 为原生 prompt
+  win.webContents.on('did-finish-load', () => {
+    win.webContents.executeJavaScript(`
+      // 如果存在 prompt0，将其替换为原生 prompt 的调用
+      if (typeof window.prompt0 !== 'undefined') {
+        window.prompt0 = function(message, defaultValue) {
+          return window.prompt(message, defaultValue);
+        };
+        console.log('✅ prompt0 已修复，现在可以正常弹出输入框');
+      } else {
+        console.log('⚠️ 未找到 prompt0，可能不需要修复');
+      }
+    `);
+  });
 }
 
 app.whenReady().then(() => {
